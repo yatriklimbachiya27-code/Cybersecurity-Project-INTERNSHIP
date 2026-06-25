@@ -3,7 +3,8 @@ from app import create_app
 app = create_app()
 
 if __name__ == "__main__":
-    # Runs the web application locally on port 5000
-    print("UPI Transaction Fraud Detection System - Starting web service...")
-    print("Default operator credentials: admin / admin123")
-    app.run(debug=True, host="127.0.0.1", port=5000)
+    # Production run configuration (used only for local debugging)
+    # Vercel will use gunicorn; this block is optional.
+    import os
+    port = int(os.getenv("PORT", 5000))
+    app.run(debug=False, host="0.0.0.0", port=port)
