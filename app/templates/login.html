@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}UPI Security Suite - Authentication{% endblock %}
+{% block auth_content %}
+<div class="auth-wrapper">
+    <div class="glass-panel auth-card">
+        <div class="auth-header">
+            <div class="auth-logo">
+                <i data-lucide="shield-check"></i>
+            </div>
+            <h2>UPI Fraud Monitor</h2>
+            <p class="auth-subtitle">Cybersecurity Intelligence Gate</p>
+        </div>
+
+        <!-- Flash messages inside login card -->
+        <div class="alert-container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}" style="padding: 10px 14px; margin-bottom: 10px;">
+                            <span>{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        <form action="{{ url_for('auth_login') }}" method="POST">
+            <div class="form-group">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" id="username" name="username" class="form-control" placeholder="Enter operator ID" required autocomplete="off">
+            </div>
+            
+            <div class="form-group">
+                <label for="password" class="form-label">Security Password</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">
+                <i data-lucide="key-round"></i>
+                <span>Authenticate Session</span>
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            <p>New security analyst? <a href="{{ url_for('auth_register') }}">Register terminal</a></p>
+            <p style="margin-top: 15px; font-size: 11px; color: var(--text-dim);">Authorized personnel only. Activities are actively audited.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

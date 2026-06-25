@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% block title %}UPI Security Suite - Reports & Logs{% endblock %}
+{% block page_title %}Audit Logs & Firewall Configurations{% endblock %}
+
+{% block content %}
+<div class="charts-grid" style="grid-template-columns: 2fr 1.2fr;">
+    <!-- Complete Transaction Audit Log -->
+    <div class="glass-panel">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h3 style="font-size: 18px; display: flex; align-items: center; gap: 8px;">
+                <i data-lucide="archive" style="color: var(--secondary);"></i>
+                <span>Historical Transaction Records</span>
+            </h3>
+            
+            <!-- Real-time client-side search -->
+            <div style="width: 250px; position: relative;">
+                <input type="text" id="txnSearch" class="form-control" placeholder="Search Txn ID, User, or Location..." style="padding: 8px 12px 8px 34px; font-size: 13px; border-radius: 8px;">
+                <i data-lucide="search" style="position: absolute; left: 10px; top: 10px; width: 14px; height: 14px; color: var(--text-dim);"></i>
+            </div>
+        </div>
+        
+        <div class="table-responsive" style="max-height: 550px; overflow-y: auto;">
+            <table class="cyber-table" id="txnTable">
+                <thead>
+                    <tr>
+                        <th>Transaction ID</th>
+                        <th>User</th>
+                        <th>Amount</th>
+                        <th>Device ID</th>
+                        <th>IP Address</th>
+                        <th>Location</th>
+                        <th>Model</th>
+                        <th>Risk %</th>
+                        <th>Result</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if transactions %}
+                        {% for txn in transactions %}
+                            <tr class="txn-row">
+                                <td class="searchable-id" style="font-family: monospace; font-weight: 600; color: var(--secondary);">{{ txn.transaction_id }}</td>
+                                <td class="searchable-user">{{ txn.user.username }}</td>
+                                <td>₹{{ "{:,.2f}".format(txn.amount) }}</td>
+                                <td style="font-family: monospace; font-size: 12px;">{{ txn.device_id }}</td>
+                                <td>{{ txn.ip_address }}</td>
+                                <td class="searchable-loc">{{ txn.location }}</td>
+                                <td style="font-size: 11px;">{{ txn.prediction_model }}</td>
+                                <td>
+                                    <strong style="color: {% if txn.risk_level == 'High' %}var(--threat-high){% elif txn.risk_level == 'Medium' %}var(--threat-med){% else %}var(--threat-low){% endif %};">
+                                        {{ txn.risk_score }}%
+                                    </strong>
+                                </td>
+                                <td>
+                                    <span class="badge badge-{% if txn.risk_level == 'High' %}high{% elif txn.risk_level == 'Medium' %}medium{% else %}low{% endif %}" style="font-size: 9px; padding: 2px 6px;">
+                                        {{ txn.risk_level }}
+                                    </span>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="9" style="text-align: center; color: var(--text-dim); padding: 40px;">
+                                No transactions archived yet.
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Firewall Blocklist Settings -->
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+        <!-- Add IP Form -->
+        <div class="glass-panel">
+            <h3 style="font-size: 16px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                <i data-lucide="shield-plus" style="color: var(--primary);"></i>
+                <span>Configure Firewall Rules</span>
+            </h3>
+            
+            <form action="{{ url_for('add_blocked_ip') }}" method="POST">
+                <div class="form-group">
+                    <label for="ip_address" class="form-label">Flag IPv4 Address</label>
+                    <input type="text" id="ip_address" name="ip_address" class="form-control" placeholder="e.g. 103.45.12.98" required>
+                </div>
+                <div class="form-group">
+                    <label for="reason" class="form-label">Threat Classification / Reason</label>
+                    <input type="text" id="reason" name="reason" class="form-control" placeholder="Phishing proxy / account cracker" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 13px; padding: 10px;">
+                    <i data-lucide="plus"></i>
+                    <span>Blacklist IP Target</span>
+                </button>
+            </form>
+        </div>
+        
+        <!-- Currently Blocked IPs List -->
+        <div class="glass-panel">
+            <h3 style="font-size: 16px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                <i data-lucide="globe" style="color: var(--threat-high);"></i>
+                <span>Active IP Blocklist</span>
+            </h3>
+            
+            <div style="max-height: 300px; overflow-y: auto;">
+                <ul class="log-list">
+                    {% if suspicious_ips %}
+                        {% for ip in suspicious_ips %}
+                            <li class="log-item" style="flex-direction: column; align-items: stretch; gap: 8px; border-left: 3px solid var(--threat-high);">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <strong style="font-family: monospace; color: var(--threat-high); font-size: 13px;">{{ ip.ip_address }}</strong>
+                                    
+                                    <form action="{{ url_for('remove_blocked_ip', ip_id=ip.id) }}" method="POST" style="margin:0;">
+                                        <button type="submit" style="background: none; border: none; color: var(--text-dim); cursor: pointer; transition: var(--transition-smooth);" onmouseover="this.style.color='var(--threat-high)'" onmouseout="this.style.color='var(--text-dim)'">
+                                            <i data-lucide="trash-2" style="width:14px; height:14px;"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                                <div style="font-size: 11px; color: var(--text-muted);">{{ ip.reason }}</div>
+                                <span class="log-time">Blocked: {{ ip.flagged_at.strftime('%Y-%m-%d') }}</span>
+                            </li>
+                        {% endfor %}
+                    {% else %}
+                        <li style="text-align: center; color: var(--text-dim); padding: 20px; font-size: 12px; list-style: none;">
+                            Firewall active. No IPs currently blacklisted.
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Client-side filter script -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const searchInput = document.getElementById("txnSearch");
+        if (searchInput) {
+            searchInput.addEventListener("input", function() {
+                const query = this.value.toLowerCase();
+                const rows = document.querySelectorAll(".txn-row");
+                
+                rows.forEach(row => {
+                    const id = row.querySelector(".searchable-id").innerText.toLowerCase();
+                    const user = row.querySelector(".searchable-user").innerText.toLowerCase();
+                    const loc = row.querySelector(".searchable-loc").innerText.toLowerCase();
+                    
+                    if (id.includes(query) || user.includes(query) || loc.includes(query)) {
+                        row.style.display = "";
+                    } else {
+                        row.style.display = "none";
+                    }
+                });
+            });
+        }
+    });
+</script>
+{% endblock %}
