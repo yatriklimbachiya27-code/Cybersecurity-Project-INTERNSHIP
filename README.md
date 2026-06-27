@@ -26,65 +26,43 @@ A complete Cybersecurity and Machine Learning-driven system designed to monitor,
 
 ## Installation & Setup Guide
 
-### 1. Prerequisites
-Ensure you have **Python 3.8** or higher installed on your system. You can verify this by running:
-```bash
-python --version
-```
+Installation & Setup Guide
 
-### 2. Extract Project Files
-Navigate into the root project directory:
-```bash
-cd upi_fraud_detection
-```
-
-### 3. Initialize Virtual Environment (Recommended)
-Create and activate a virtual environment to manage dependencies locally:
-- **Windows**:
-  ```powershell
-  python -m venv venv
-  .\venv\Scripts\activate
-  ```
-- **macOS / Linux**:
-  ```bash
-  python3 -m venv venv
-  source venv/bin/activate
-  ```
-
-### 4. Install Dependencies
-Install all required libraries using `pip`:
-```bash
-pip install -r requirements.txt
-```
-
-### 5. Generate Dataset & Train ML Models
-Run the training script to generate the synthetic transaction dataset (10,000 records) and compile/evaluate the machine learning models:
-```bash
-python ml/train.py
-```
-This generates the CSV dataset in `ml/upi_transactions.csv` and serializes the trained classifiers and scalers to the `ml/models/` directory.
-
-### 6. Start the Web Server
-Launch the Flask development server:
-```bash
-python run.py
-```
-The server will initialize the SQLite database (`instance/database.db`), seed default administrator credentials, and run the service.
+1. Open the Live Website
 
 Open your browser and navigate to:
-**[http://127.0.0.1:5000](http://127.0.0.1:5000)**
+https://website-format-link.vercel.app/
 
----
+2. Analyze a Transaction
 
-## Operating Credentials
-- **Default Administrator Username**: `admin`
-- **Default Administrator Password**: `admin123`
+Enter the following information:
 
----
+* Transaction Amount
+* Time of Transaction
+* Receiver VPA Status
+* Device/IP Location
+* click:
+ Run Cyber Fraud Check
+  The system will immediately generate the fraud analysis
 
-## Core System Verification
-You can execute the offline test suite to verify that the Fraud Detection Engine operates correctly without booting the web server:
-```bash
-python verify_system.py
-```
-This script injects three mock transaction payloads (Legitimate, Suspicious, and High-Risk/Blocklisted) through the analytics engine and validates that risk level categories are mapped correctly.
+   
+Dashboard Analytics
+The dashboard displays:
+* Safe Transactions
+* Suspicious Transactions
+* Confirmed Fraud
+
+Core System Verification
+
+Test different transaction combinations to verify the fraud detection engine.
+
+Example:
+
+* High Amount + Unknown VPA + New Location → High Risk
+* Medium Amount + Unknown VPA → Suspicious
+* Normal Amount + Verified Merchant + Home Location → Safe
+
+The dashboard updates the analytics visualization based on the generated fraud classification.
+* Percentage Distribution Chart
+
+  
