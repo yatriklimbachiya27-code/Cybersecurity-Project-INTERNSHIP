@@ -1,27 +1,25 @@
-# UPI Transaction Fraud Detection System
+UPI Shield
 
-A complete Cybersecurity and Machine Learning-driven system designed to monitor, detect, and mitigate fraudulent activities in Unified Payments Interface (UPI) transactions. This project utilizes a hybrid detection engine combining scikit-learn models (Logistic Regression, Decision Tree, Random Forest) with cybersecurity heuristics (such as firewall IP blocklisting, device fingerprint verification, geolocation velocity tracking, and account age metrics) to compute a real-time risk score.
+A complete Cybersecurity-driven web application designed to analyze UPI transactions and estimate fraud risk in real time. The system evaluates transaction details such as amount, transaction time, receiver VPA status, and device/IP location to generate a fraud risk assessment. It also provides a live analytics dashboard displaying Safe, Suspicious, and Confirmed Fraud metrics through interactive charts.
 
+Key Features
+
+1. Real-Time UPI Transaction Analysis: Analyze transaction details including amount, transaction time, receiver VPA status, and device/IP location.
+2. Cyber Fraud Detection Engine: Detects suspicious transactions using cybersecurity-based heuristic rules and generates a fraud risk assessment.
+3. Risk Classification: Categorizes transactions into Safe, Suspicious, or Confirmed Fraud based on calculated risk.
+4. Interactive Analytics Dashboard: Displays real-time fraud analytics using dynamic charts and percentage-based visualization.
+5. Responsive Web Interface: Modern dark-themed dashboard optimized for desktop and mobile devices.
+6. Instant Risk Assessment: Provides immediate fraud analysis after submitting transaction details.
 ---
 
-## Key Features
-1. **User Authentication**: Secure operator login/registration console with password hashing (`pbkdf2:sha256`) and login auditing logs.
-2. **Transaction Monitor**: Simulator interface to inject transaction payloads (amount, IP, device, geolocation, account age) and choose the active ML classifier.
-3. **Hybrid Fraud Detection Engine**: Composite Risk Score (0-100) calculated using a weighted system: 50% from machine learning probabilities and 50% from cybersecurity rules.
-4. **Firewall IP Blocklist**: Dynamic blocklist console enabling administrators to blacklist suspect threat IPs and block transactions in real-time.
-5. **Real-time Incident Alerts Feed**: Displays Medium and High-risk warnings with incident-response resolution options.
-6. **Aesthetic Web Interface**: Dark-themed, glassmorphic UI using custom CSS variables, backdrop-blur components, dynamic icons (Lucide), and visual reporting charts (Chart.js).
+Technology Stack
 
----
-
-## Technology Stack
-- **Backend Framework**: Flask (Python)
-- **Database ORM**: Flask-SQLAlchemy (SQLite3)
-- **Machine Learning**: Scikit-Learn, Pandas, NumPy
-- **Frontend Layer**: HTML5, Vanilla CSS3 (Glassmorphism design), Vanilla JS
-- **Visual Charts**: Chart.js (CDN)
-- **UI Icons**: Lucide Icons (CDN)
-
+* Frontend Framework: Modern Web Technologies
+* User Interface: Responsive Dark Theme Dashboard
+* Charts & Analytics: Interactive Doughnut Chart
+* Deployment Platform: Vercel
+* Programming Language: JavaScript
+* Styling: CSS3
 ---
 
 ## Installation & Setup Guide
